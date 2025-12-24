@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>🎄 Merry Christmas</title>
+
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        background: radial-gradient(circle at top, #123, #000);
+        height: 100%;
+        overflow: hidden;
+        font-family: "Arial", sans-serif;
+        color: white;
+    }
+
+    canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .center-text {
+        position: absolute;
+        top: 18%;
+        width: 100%;
+        text-align: center;
+        font-size: 2.5em;
+        font-weight: bold;
+        animation: glow 2s infinite alternate;
+    }
+
+    .sub-text {
+        position: absolute;
+        top: 28%;
+        width: 100%;
+        text-align: center;
+        font-size: 1.2em;
+        opacity: 0.9;
+    }
+
+    @keyframes glow {
+        from {
+            text-shadow: 0 0 5px #fff, 0 0 15px #0f0;
+        }
+        to {
+            text-shadow: 0 0 15px #fff, 0 0 35px #f00;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<canvas id="snow"></canvas>
+
+<div class="center-text">🎄 Merry Christmas 🎄</div>
+<div class="sub-text">愿你平安、喜乐、心想事成</div>
+
+<script>
+/* ---------- 雪花动画 ---------- */
+const canvas = document.getElementById("snow");
+const ctx = canvas.getContext("2d");
+
+let w = canvas.width = window.innerWidth;
+let h = canvas.height = window.innerHeight;
+
+const snowflakes = [];
+const maxFlakes = 120;
+
+for (let i = 0; i < maxFlakes; i++) {
+    snowflakes.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 4 + 1,
+        d: Math.random() + 1
+    });
+}
+
+let angle = 0;
+
+function drawSnow() {
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = "rgba(255,255,255,0.8)";
+    ctx.beginPath();
+    for (let i = 0; i < maxFlakes; i++) {
+        const f = snowflakes[i];
+        ctx.moveTo(f.x, f.y);
+        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
+    }
+    ctx.fill();
+    moveSnow();
+}
+
+function moveSnow() {
+    angle += 0.01;
+    for (let i = 0; i < maxFlakes; i++) {
+        const f = snowflakes[i];
+        f.y += Math.pow(f.d, 2) + 1;
+        f.x += Math.sin(angle) * 0.5;
+
+        if (f.y > h) {
+            f.y = -10;
+            f.x = Math.random() * w;
+        }
+    }
+}
+
+function animate() {
+    drawSnow();
+    requestAnimationFrame(animate);
+}
+
+animate();
+
+window.onresize = () => {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+};
+</script>
+
+</body>
+</html>
